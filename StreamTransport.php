@@ -51,8 +51,8 @@ class StreamTransport extends Transport
         $contextOptions = ArrayHelper::merge($contextOptions, $this->composeContextOptions($request->getOptions()));
 
         $token = $request->client->createRequestLogToken($method, $url, $headers, $content);
-        Yii::info($token, __METHOD__);
-        Yii::beginProfile($token, __METHOD__);
+        Yii::info($token, __METHOD__ . $this->logPostfix);
+        Yii::beginProfile($token, __METHOD__ . $this->logPostfix);
 
         try {
             $context = stream_context_create($contextOptions);
@@ -61,11 +61,11 @@ class StreamTransport extends Transport
             $metaData = stream_get_meta_data($stream);
             fclose($stream);
         } catch (\Exception $exception) {
-            Yii::endProfile($token, __METHOD__);
+            Yii::endProfile($token, __METHOD__ . $this->logPostfix);
             throw $exception;
         }
 
-        Yii::endProfile($token, __METHOD__);
+        Yii::endProfile($token, __METHOD__ . $this->logPostfix);
 
         $responseHeaders = isset($metaData['wrapper_data']) ? $metaData['wrapper_data'] : [];
 

@@ -34,12 +34,12 @@ class CurlTransport extends Transport
         $this->setHeaderOutput($curlResource, $responseHeaders);
 
         $token = $request->client->createRequestLogToken($request->getMethod(), $curlOptions[CURLOPT_URL], $curlOptions[CURLOPT_HTTPHEADER], $request->getContent());
-        Yii::info($token, __METHOD__);
-        Yii::beginProfile($token, __METHOD__);
+        Yii::info($token, __METHOD__ . $this->logPostfix);
+        Yii::beginProfile($token, __METHOD__ . $this->logPostfix);
 
         $responseContent = curl_exec($curlResource);
 
-        Yii::endProfile($token, __METHOD__);
+        Yii::endProfile($token, __METHOD__ . $this->logPostfix);
 
         // check cURL error
         $errorNumber = curl_errno($curlResource);
@@ -77,8 +77,8 @@ class CurlTransport extends Transport
             curl_multi_add_handle($curlBatchResource, $curlResource);
         }
 
-        Yii::info($token, __METHOD__);
-        Yii::beginProfile($token, __METHOD__);
+        Yii::info($token, __METHOD__ . $this->logPostfix);
+        Yii::beginProfile($token, __METHOD__ . $this->logPostfix);
 
         $isRunning = null;
         do {
@@ -91,7 +91,7 @@ class CurlTransport extends Transport
             } while ($curlExecCode === CURLM_CALL_MULTI_PERFORM);
         } while ($isRunning > 0 && $curlExecCode === CURLM_OK);
 
-        Yii::endProfile($token, __METHOD__);
+        Yii::endProfile($token, __METHOD__ . $this->logPostfix);
 
         $responseContents = [];
         foreach ($curlResources as $key => $curlResource) {

@@ -18,6 +18,9 @@ use yii\base\Exception;
  */
 abstract class Transport extends Component
 {
+    
+    public $logPostfix = '';
+    
     /**
      * Performs given request.
      * @param Request $request request to be sent.
